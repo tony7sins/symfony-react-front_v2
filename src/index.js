@@ -1,18 +1,21 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
+import * as serviceWorker from './serviceWorker'
 import { createStore, applyMiddleware, compose } from 'redux'
-import { Provider } from 'react-redux'
+import reducers from './reducers'
 import reduxThunk from 'redux-thunk'
-import { Router, Route, Switch } from 'react-router-dom'
+
+import { Provider } from 'react-redux'
+import { Router } from 'react-router-dom'
+
 import history from './history'
-import App from './components/App';
-import LoginForm from './components/LoginForm'
-import * as serviceWorker from './serviceWorker';
+import App from './components/App'
+
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
-    state => state,
+    reducers,
     composeEnhancers(
         applyMiddleware(reduxThunk)
     )
@@ -21,18 +24,9 @@ const store = createStore(
 ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
-            <Fragment>
-                <h1>Header</h1>
-                <Switch>
-                    <Route path="/" exact component={App} />
-                    <Route path="/login" exact component={LoginForm} />
-                </Switch>
-            </Fragment>
-
-
+            <App />
         </Router>
-    </Provider>
-    ,
+    </Provider>,
     document.getElementById('root')
 )
 // If you want your app to work offline and load faster, you can change

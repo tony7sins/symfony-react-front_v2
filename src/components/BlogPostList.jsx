@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-// import timeago from 'timeago.js'
-import TimeAgo from 'timeago-react'
+import Loader from './Loader'
+import BlogPostListItem from './BlogPostListItem'
+import Warning from './Warning'
 
 class BlogPostList extends Component {
     static propTypes = {
@@ -15,40 +16,14 @@ class BlogPostList extends Component {
     }
 
     render() {
-        // console.log(this.props.posts)
         const { posts, isFetching } = this.props
 
-        if (isFetching) {
-            return (
-                <div className="fa-3x">
-                    <i className="fas fa-spinner fa-spin" />
-                </div>
-            )
-        }
-        if (0 === posts.length) {
-            return (
-                <div>No blogposts!</div>
-            )
-        }
         return (
-            <div>
-                {posts && posts.map(({ id, title, published = '' }) => (
-                    <div className="card mb-3 mt-3 shadow-sm" key={id}>
-                        <div className="card-body">
-                            <h3>{title}</h3>
-                            <p className="card-text border-top">
-                                <small className="text-muted">
-                                    <TimeAgo
-                                        datetime={published}
-                                        locale='ru'
-                                    />
-                                </small>
-                            </p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
+            <Fragment>
+                {(isFetching && 0 === posts.length) && <Loader />}
+                {(0 === posts.length && !isFetching) && <Warning text='blogposts' />}
+                {posts && posts.map(post => <BlogPostListItem key={post.id} post={post} />)}
+            </Fragment>
         )
     }
 }

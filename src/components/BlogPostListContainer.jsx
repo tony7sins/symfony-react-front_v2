@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { blogPostAdd, blogPostListFetch } from '../actions'
@@ -23,23 +23,20 @@ class BlogPostListContainer extends Component {
 
     render() {
         const { posts, isFetching } = this.props
-        // console.log(posts)
         return (
-            <div>
+            <Fragment>
                 <BlogPostList
                     posts={posts}
-                    isFetching={isFetching} />
-            </div>
+                    isFetching={isFetching}
+                />
+            </Fragment>
         )
     }
 }
 
-const mapStateToProps = ({ blogPostList }) => {
-    // console.log({ ...blogPostList })
-    return {
-        ...blogPostList
-    }
-}
+const mapStateToProps = ({ blogPostList }) => ({
+    ...blogPostList
+})
 
 const dispatchToProps = {
     blogPostAdd,

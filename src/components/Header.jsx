@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-export default class Header extends Component {
+class Header extends Component {
     static propTypes = {
         children: PropTypes.node,
     }
@@ -21,3 +21,5 @@ export default class Header extends Component {
         )
     }
 }
+
+export default Header

@@ -6,12 +6,16 @@ import {
     BLOG_POST_REQUEST,
     BLOG_POST_ERROR,
     BLOG_POST_RECIEVED,
-    BLOG_POST_UNLOAD
+    BLOG_POST_UNLOAD,
+    COMMENT_LIST_REQUEST,
+    COMMENT_LIST_RECIEVED,
+    COMMENT_LIST_ERROR,
+    COMMENT_LIST_UNLOAD
 } from "./types"
 
 import api from '../api/blogPosts'
 
-
+//!___BLOG_POST_LIST___
 export const blogPostListRequest = () => ({
     type: BLOG_POST_LIST_REQUEST,
 })
@@ -35,10 +39,15 @@ export const blogPostListFetch = () => async (dispatch) => {
     }
 }
 
-export const blogPostClear = () => ({
-    type: BLOG_POST_UNLOAD
+export const blogPostAdd = () => ({
+    type: BLOG_POST_LIST_ADD,
+    payload: {
+        id: Math.floor(Math.random() * 100 + 3),
+        title: 'A new post created!'
+    }
 })
 
+//!___BLOG_POST___
 export const blogPostRequest = () => ({
     type: BLOG_POST_REQUEST
 })
@@ -53,6 +62,9 @@ export const blogPostRecieved = (data) => ({
     payload: data
 })
 
+export const blogPostUnload = () => ({
+    type: BLOG_POST_UNLOAD
+})
 
 export const blogPostFetch = id => async dispatch => {
     dispatch(blogPostRequest())
@@ -64,13 +76,34 @@ export const blogPostFetch = id => async dispatch => {
     }
 }
 
-export const blogPostAdd = () => ({
-    type: BLOG_POST_LIST_ADD,
-    payload: {
-        id: Math.floor(Math.random() * 100 + 3),
-        title: 'A new post created!'
-    }
+//!___COMMENT_LIST___
+export const commentListRequest = () => ({
+    type: COMMENT_LIST_REQUEST
 })
+
+export const commentListError = (error) => ({
+    type: COMMENT_LIST_ERROR,
+    payload: error
+})
+
+export const commentListRecieved = (data) => ({
+    type: COMMENT_LIST_RECIEVED,
+    payload: data
+})
+
+export const commentListUnload = () => ({
+    type: COMMENT_LIST_UNLOAD
+})
+
+export const commentListFetch = id => async dispatch => {
+    dispatch(commentListRequest())
+    try {
+        await api.get(`/blog_posts/${id}/comments`)
+            .then(({ data }) => dispatch(commentListRecieved(data)))
+    } catch (err) {
+        dispatch(commentListError(err))
+    }
+}
 
 
 

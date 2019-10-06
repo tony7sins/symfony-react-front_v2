@@ -1,4 +1,9 @@
-import { BLOG_POST_REQUEST, BLOG_POST_RECIEVED, BLOG_POST_ERROR, BLOG_POST_UNLOAD } from "../actions/types";
+import {
+    BLOG_POST_REQUEST,
+    BLOG_POST_RECIEVED,
+    BLOG_POST_ERROR,
+    BLOG_POST_UNLOAD
+} from "../actions/types"
 
 export default (state = {
     post: {},

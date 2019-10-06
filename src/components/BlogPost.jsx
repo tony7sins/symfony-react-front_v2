@@ -20,21 +20,19 @@ export default class BlogPost extends Component {
         const { title, content, published = '', author = '' } = this.props.post
         // console.log(this.props.post)
         return (
-            <div className="card mb-3 mt-3 shadow-sm">
-                <div className="card-body">
-                    <h2>{title}</h2>
-                    <p className="card-text">{content}</p>
-                    <p className="card-text border-top">
-                        <small className="text-muted">
-                            <TimeAgo
-                                datetime={published}
-                                locale='ru'
-                            /> by &nbsp;
+            <>
+                <h2>{title}</h2>
+                <p className="card-text">{content}</p>
+                <p className="card-text border-top">
+                    <small className="text-muted">
+                        <TimeAgo
+                            datetime={published}
+                            locale='ru'
+                        /> by &nbsp;
                         {author.name}
-                        </small>
-                    </p>
-                </div>
-            </div>
+                    </small>
+                </p>
+            </>
         )
     }
 }

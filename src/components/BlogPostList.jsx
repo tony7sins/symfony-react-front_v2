@@ -22,7 +22,7 @@ class BlogPostList extends Component {
             <Fragment>
                 {(isFetching && 0 === posts.length) && <Loader />}
                 {(0 === posts.length && !isFetching) && <Warning text='blogposts' />}
-                {posts && posts.map(post => <BlogPostListItem key={post.id} post={post} />)}
+                {(0 < posts.length) && posts.map(post => <BlogPostListItem key={post.id} post={post} />)}
             </Fragment>
         )
     }

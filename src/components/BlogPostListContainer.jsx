@@ -25,10 +25,14 @@ class BlogPostListContainer extends Component {
         const { posts, isFetching } = this.props
         return (
             <Fragment>
-                <BlogPostList
-                    posts={posts}
-                    isFetching={isFetching}
-                />
+                <div className="card mb-3 mt-3 shadow-sm">
+                    <div className="card-body">
+                        <BlogPostList
+                            posts={posts}
+                            isFetching={isFetching}
+                        />
+                    </div>
+                </div>
             </Fragment>
         )
     }

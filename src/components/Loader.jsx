@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const Loader = props => {
     return (
-        <div className="loader fa-3x">
+        <div className="text-center loader fa-3x">
             <i className="fas fa-spinner fa-spin" />
         </div>
     )

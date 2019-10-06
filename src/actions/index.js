@@ -105,5 +105,17 @@ export const commentListFetch = id => async dispatch => {
     }
 }
 
+//!___USER_LOGIN___
+
+export const userLoginAttapmt = (username, password) => async dispatch => {
+    try {
+        await api.post('/login_check', { username, password })
+            .then(res => console.log(res))
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 
 

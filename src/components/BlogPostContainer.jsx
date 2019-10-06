@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { blogPostFetch, blogPostClear } from '../actions'
+import { blogPostFetch, blogPostUnload } from '../actions'
 import Loader from './Loader'
 import BlogPost from './BlogPost'
+import Warning from './Warning'
+import CommentListContainer from './CommentListContainer'
 
 class BlogPostContainer extends Component {
     static propTypes = {
@@ -21,16 +23,20 @@ class BlogPostContainer extends Component {
     }
 
     componentWillUnmount() {
-        this.props.blogPostClear()
+        this.props.blogPostUnload()
     }
 
     render() {
         const { isFetching, post } = this.props
-        console.log(isFetching)
+        // console.log(isFetching)
         return (
-            <div>
-                {(0 === Object.keys(post).length) && <Loader />}
-                <BlogPost post={post} />
+            <div className="card mb-3 mt-3 shadow-sm">
+                <div className="card-body">
+                    {(0 === Object.keys(post).length && isFetching) && <Loader />}
+                    {(0 === Object.keys(post).length && !isFetching) && <Warning text='blog post' />}
+                    {(0 !== Object.keys(post).length) && <BlogPost post={post} />}
+                    <CommentListContainer blogPostId={this.props.match.params.id} />
+                </div>
             </div>
         )
     }
@@ -45,7 +51,7 @@ const mapStateToProps = ({ blogPost }) => {
 
 const mapDispatchToProps = {
     blogPostFetch,
-    blogPostClear,
+    blogPostUnload,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlogPostContainer)

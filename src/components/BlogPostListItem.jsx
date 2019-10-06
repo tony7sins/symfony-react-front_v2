@@ -11,19 +11,15 @@ const BlogPostListItem = (props) => {
 
     return (
         <>
-            <div className="card mb-3 mt-3 shadow-sm">
-                <div className="card-body">
-                    <Link to={`/blog-post/${id}`}>{title}</Link>
-                    <p className="card-text border-top">
-                        <small className="text-muted">
-                            <TimeAgo
-                                datetime={published}
-                                locale='ru'
-                            />
-                        </small>
-                    </p>
-                </div>
-            </div>
+            <Link to={`/blog-post/${id}`}>{title}</Link>
+            <p className="card-text border-top">
+                <small className="text-muted">
+                    <TimeAgo
+                        datetime={published}
+                        locale='ru'
+                    />
+                </small>
+            </p>
         </>
     )
 }

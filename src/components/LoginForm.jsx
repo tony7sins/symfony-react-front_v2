@@ -1,22 +1,36 @@
 import React from 'react'
+// import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { reduxForm, Field } from 'redux-form'
 import { renderField } from '../form'
 import { connect } from 'react-redux'
 import { userLoginAttapmt } from '../actions'
+// import { bindActionCreators } from "redux"
+
 
 const LoginForm = (props) => {
-    // console.log(props)
-    const onSubmit = ({ username, password }) => {
-        props.userLoginAttapmt(username, password)
+
+    const { handleSubmit, submitting, error } = props
+    // 
+
+    // useEffect(() => {
+    //     // const { error } = props
+    //     console.log(props);
+
+    // }, [props])
+
+    const onSubmit = (values) => {
+        // console.log(values)
+        return props.userLoginAttapmt(values.username, values.password)
     }
     return (
-        <div>
-            <form action="" className="mt-4 text-center" onSubmit={props.handleSubmit(onSubmit)}>
+        <div className="text-center">
+            <form action="" className="mt-4 text-center" onSubmit={handleSubmit(onSubmit)}>
                 <Field name='username' label='Username' type='text' component={renderField} />
                 <Field name='password' label='Password' type='password' component={renderField} />
-                <button type="submit" className="btn btn-primary btn-big btn-block">Log in!</button>
+                <button type="submit" disabled={submitting} className="btn btn-primary btn-big btn-block">Log in!</button>
             </form>
+            {error && <div className="alert alert-danger">{error}</div>}
         </div>
     )
 }
@@ -36,5 +50,10 @@ const formWrapped = reduxForm({
 const mapDispatchToProps = {
     userLoginAttapmt
 }
+
+// const mapDispatchToProps = (dispatch) => bindActionCreators({
+//     userLoginAttapmt
+// }, dispatch)
+
 
 export default connect(null, mapDispatchToProps)(formWrapped)

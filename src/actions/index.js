@@ -10,10 +10,20 @@ import {
     COMMENT_LIST_REQUEST,
     COMMENT_LIST_RECIEVED,
     COMMENT_LIST_ERROR,
-    COMMENT_LIST_UNLOAD
+    COMMENT_LIST_UNLOAD,
+    USER_LOGIN_SUCCESS,
+    USER_PROFILE_RECEIVED,
+    USER_PROFILE_ERROR,
+    USER_PROFILE_REQUEST,
+    USER_ERISE,
+    USER_SET_ID
 } from "./types"
 
-import api from '../api/blogPosts'
+import { SubmissionError } from 'redux-form/immutable'
+
+import history from '../history'
+
+import request from '../api/request'
 
 //!___BLOG_POST_LIST___
 export const blogPostListRequest = () => ({
@@ -33,7 +43,7 @@ export const blogPostListRecieved = (data) => ({
 export const blogPostListFetch = () => async (dispatch) => {
     dispatch(blogPostListRequest())
     try {
-        await api.get('/blog_posts').then(({ data }) => dispatch(blogPostListRecieved(data)))
+        await request.get('/api/blog_posts').then(({ data }) => dispatch(blogPostListRecieved(data)))
     } catch (err) {
         dispatch(blogPostListError(err))
     }
@@ -69,7 +79,7 @@ export const blogPostUnload = () => ({
 export const blogPostFetch = id => async dispatch => {
     dispatch(blogPostRequest())
     try {
-        await api.get(`/blog_posts/${id}`)
+        await request.get(`/api/blog_posts/${id}`)
             .then(({ data }) => dispatch(blogPostRecieved(data)))
     } catch (err) {
         dispatch(blogPostError(err))
@@ -98,7 +108,7 @@ export const commentListUnload = () => ({
 export const commentListFetch = id => async dispatch => {
     dispatch(commentListRequest())
     try {
-        await api.get(`/blog_posts/${id}/comments`)
+        await request.get(`/api/blog_posts/${id}/comments`)
             .then(({ data }) => dispatch(commentListRecieved(data)))
     } catch (err) {
         dispatch(commentListError(err))
@@ -107,14 +117,92 @@ export const commentListFetch = id => async dispatch => {
 
 //!___USER_LOGIN___
 
+export const userLoginSuccess = (token, userId) => ({
+    type: USER_LOGIN_SUCCESS,
+    payload: {
+        token,
+        userId
+    }
+})
+
 export const userLoginAttapmt = (username, password) => async dispatch => {
+    // try {
+    await dispatch(userLogout())
+    return await request
+        .post('/api/login_check', { username, password }, false)
+        .then(res => dispatch(userLoginSuccess(res.data.token, res.data.id)))
+        .then(() => history.push('/'))
+        .catch(err => {
+            if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
+                console.log('logout')
+                dispatch(userLogout())
+                // throw new SubmissionError({ _error: err.response.data.message })
+            }
+            if (err.response.data.code === 401) {
+                throw new SubmissionError({ _error: err.response.data.message })
+            }
+            return
+        })
+}
+
+export const userSetId = (userId) => ({
+    type: USER_SET_ID,
+    payload: userId
+})
+
+export const userLogout = () => async dispatch => {
     try {
-        await api.post('/login_check', { username, password })
-            .then(res => console.log(res))
+        await request.get(`/logout`)
+            .then(() => dispatch(userErise()))
+            .then(() => {
+                throw new SubmissionError({ _error: 'You are logged out' })
+            })
+    } catch (err) {
+        console.log(err.response)
+        // dispatch(commentListError(err))
     }
-    catch (err) {
-        console.log(err)
+}
+
+export const userErise = () => ({
+    type: USER_ERISE
+})
+
+export const userProfileRequest = () => ({
+    type: USER_PROFILE_REQUEST
+})
+
+export const userProfileError = () => ({
+    type: USER_PROFILE_ERROR
+})
+
+export const userProfileReceived = (userId, userData) => ({
+    type: USER_PROFILE_RECEIVED,
+    payload: {
+        userId: userId,
+        userData: userData
     }
+})
+
+export const userProfileFetch = (userId) => async dispatch => {
+    dispatch(userProfileRequest())
+    await request
+        .get(`/api/users/${userId}`, true)
+        .then(res => {
+            // console.log(res.data)
+            return dispatch(userProfileReceived(userId, res.data))
+        })
+        .catch(err => {
+            if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
+                console.log('logout')
+                dispatch(userLogout())
+                throw new SubmissionError({ _error: err.response.data.message })
+            }
+            if (err.response.data.code === 401) {
+                throw new SubmissionError({ _error: err.response.data.message })
+            }
+            return dispatch(userProfileError())
+        })
+    // .catch(err => console.log(err.response.data))
 }
 
 

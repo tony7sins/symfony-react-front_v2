@@ -4,6 +4,7 @@ import * as serviceWorker from './serviceWorker'
 import { createStore, applyMiddleware, compose } from 'redux'
 import reducers from './reducers'
 import reduxThunk from 'redux-thunk'
+import tokenMiddleware from './middleware'
 
 import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
@@ -17,7 +18,10 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
     reducers,
     composeEnhancers(
-        applyMiddleware(reduxThunk)
+        applyMiddleware(
+            reduxThunk,
+            tokenMiddleware
+        )
     )
 )
 

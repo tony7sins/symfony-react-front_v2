@@ -37,12 +37,9 @@ class CommentListContainer extends Component {
         )
     }
 }
-const mapStateToProps = ({ commentList }) => {
-    // console.log(blogPost)
-    return {
-        ...commentList
-    }
-}
+const mapStateToProps = ({ commentList }) => ({
+    ...commentList
+})
 
 const mapDispatchToProps = {
     commentListFetch,

@@ -11,16 +11,8 @@ import { userLoginAttapmt } from '../actions'
 const LoginForm = (props) => {
 
     const { handleSubmit, submitting, error } = props
-    // 
-
-    // useEffect(() => {
-    //     // const { error } = props
-    //     console.log(props);
-
-    // }, [props])
 
     const onSubmit = (values) => {
-        // console.log(values)
         return props.userLoginAttapmt(values.username, values.password)
     }
     return (

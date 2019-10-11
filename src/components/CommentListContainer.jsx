@@ -5,6 +5,7 @@ import { commentListFetch, commentListUnload } from '../actions'
 import Loader from './Loader'
 import CommentList from './CommentList'
 import Warning from './Warning'
+import CommentForm from './CommentForm'
 
 class CommentListContainer extends Component {
     static propTypes = {
@@ -13,6 +14,15 @@ class CommentListContainer extends Component {
         commentListUnload: PropTypes.func,
         commentList: PropTypes.array,
         blogPostId: PropTypes.string,
+        isAuthenticated: PropTypes.bool
+    }
+    static defaultProps = {
+        children: null,
+        commentListFetch: () => { },
+        commentListUnload: () => { },
+        commentList: [],
+        blogPostId: '',
+        isAuthenticated: false,
     }
 
     componentDidMount() {
@@ -27,19 +37,29 @@ class CommentListContainer extends Component {
 
     render() {
 
-        const { isFetching, commentList } = this.props
+        const { isFetching, commentList, isAuthenticated, blogPostId } = this.props
         return (
             <>
                 {(0 === commentList.length && isFetching) && <Loader />}
                 {(0 === commentList.length && !isFetching) && <Warning text='blog post' />}
                 {(commentList !== []) && <CommentList commentList={commentList} />}
+                {isAuthenticated &&
+                    <>
+                        <CommentForm blogPostId={blogPostId} />
+                    </>}
             </>
         )
     }
 }
-const mapStateToProps = ({ commentList }) => ({
-    ...commentList
-})
+const mapStateToProps = (state) => {
+    // console.log(state.auth)
+    return {
+        ...state.commentList,
+        isAuthenticated: state.auth.isAuthenticated
+    }
+
+
+}
 
 const mapDispatchToProps = {
     commentListFetch,

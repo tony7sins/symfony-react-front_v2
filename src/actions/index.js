@@ -16,7 +16,8 @@ import {
     USER_PROFILE_ERROR,
     USER_PROFILE_REQUEST,
     USER_ERISE,
-    USER_SET_ID
+    USER_SET_ID,
+    COMMENT_ADDED
 } from "./types"
 
 import { SubmissionError } from 'redux-form/immutable'
@@ -126,20 +127,24 @@ export const userLoginSuccess = (token, userId) => ({
 })
 
 export const userLoginAttapmt = (username, password) => async dispatch => {
-    // try {
-    await dispatch(userLogout())
+    await dispatch(userErise())
+    if (username === null) await dispatch(userLogout())
     return await request
         .post('/api/login_check', { username, password }, false)
         .then(res => dispatch(userLoginSuccess(res.data.token, res.data.id)))
         .then(() => history.push('/'))
         .catch(err => {
+            console.log(err.response.status)
             if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
-                console.log('logout')
+                // console.log('logout')
                 dispatch(userLogout())
-                // throw new SubmissionError({ _error: err.response.data.message })
+                throw new SubmissionError({ _error: err.response.data.message })
             }
             if (err.response.data.code === 401) {
                 throw new SubmissionError({ _error: err.response.data.message })
+            }
+            if (err.response.status === 400) {
+                throw new SubmissionError({ _error: 'что-то пошло не так!' })
             }
             return
         })
@@ -166,6 +171,8 @@ export const userLogout = () => async dispatch => {
 export const userErise = () => ({
     type: USER_ERISE
 })
+
+//!___USER_PROFILE___
 
 export const userProfileRequest = () => ({
     type: USER_PROFILE_REQUEST
@@ -203,6 +210,29 @@ export const userProfileFetch = (userId) => async dispatch => {
             return dispatch(userProfileError())
         })
     // .catch(err => console.log(err.response.data))
+}
+
+//!___USER_COMMENT___
+export const commentAdded = (comment) => ({
+    type: COMMENT_ADDED,
+    payload: comment
+})
+
+export const commentAdd = (comment, blogPostId) => async dispatch => {
+    return await request.post('/api/comments', {
+        content: comment,
+        blogPost: `/api/blog_posts/${blogPostId}`
+    }, true)
+        .then(res => dispatch(commentAdded(res.data)))
+        .catch(err => {
+            // console.log(err.response.data.violations)
+            const { violations } = err.response.data
+            violations.map(violation => {
+                // console.log(violation.message)
+                throw new SubmissionError({ comment: 'is blank', _error: violation.message })
+                // 
+            })
+        })
 }
 
 

@@ -23,14 +23,12 @@ class App extends Component {
     componentDidMount() {
 
         let { token, userId } = this.state
-        const { userProfileFetch, userLoginSuccess, } = this.props
+        const { userLoginSuccess, } = this.props
+        // const { userProfileFetch, userLoginSuccess, } = this.props
 
-        // console.log(token === null, )
         if (userId !== 'null' && userId !== null && userId !== 'undefined') {
-            // console.log('ok!')
             userSetId(userId)
             userLoginSuccess(token, userId)
-            // userProfileFetch(userId)
         }
     }
 

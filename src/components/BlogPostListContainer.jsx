@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { blogPostAdd, blogPostListFetch } from '../actions'
 
 import BlogPostList from './BlogPostList'
+import Paginator from './Paginator'
 
 class BlogPostListContainer extends Component {
     static propTypes = {
@@ -25,13 +26,14 @@ class BlogPostListContainer extends Component {
         const { posts, isFetching } = this.props
         return (
             <Fragment>
-                <div className="card mb-3 mt-3 shadow-sm">
+                <div className="mb-3 mt-3">
                     <div className="card-body">
                         <BlogPostList
                             posts={posts}
                             isFetching={isFetching}
                         />
                     </div>
+                    <Paginator pageCount={10} currentPage={1} />
                 </div>
             </Fragment>
         )

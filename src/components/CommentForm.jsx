@@ -31,7 +31,7 @@ class CommentForm extends Component {
 
     onSubmit = (values) => {
 
-        console.log(values.meta)
+        // console.log(values.meta)
         const { blogPostId, commentAdd, reset } = this.props
         return commentAdd(values.content, blogPostId).then(() => (reset()))
     }

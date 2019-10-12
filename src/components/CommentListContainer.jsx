@@ -42,7 +42,7 @@ class CommentListContainer extends Component {
             <>
                 {(0 === commentList.length && isFetching) && <Loader />}
                 {(0 === commentList.length && !isFetching) && <Warning text='blog post' />}
-                {(commentList !== []) && <CommentList commentList={commentList} />}
+                {(commentList !== []) ? <CommentList commentList={commentList} /> : <h3>No comments!</h3>}
                 {isAuthenticated &&
                     <>
                         <CommentForm blogPostId={blogPostId} />

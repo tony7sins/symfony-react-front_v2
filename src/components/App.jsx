@@ -11,7 +11,8 @@ import { connect } from 'react-redux'
 import {
     userLoginSuccess,
     userProfileFetch,
-    userSetId
+    userSetId,
+    userLogout,
 } from '../actions'
 
 class App extends Component {
@@ -21,11 +22,9 @@ class App extends Component {
     }
 
     componentDidMount() {
-
         let { token, userId } = this.state
         const { userLoginSuccess, } = this.props
         // const { userProfileFetch, userLoginSuccess, } = this.props
-
         if (userId !== 'null' && userId !== null && userId !== 'undefined') {
             userSetId(userId)
             userLoginSuccess(token, userId)
@@ -33,7 +32,6 @@ class App extends Component {
     }
 
     componentDidUpdate(prevProps) {
-
         const { userId, userData } = this.props.auth
         const { userProfileFetch } = this.props
 
@@ -48,19 +46,12 @@ class App extends Component {
         }
     }
 
-
-    getAuthBool = () => {
-        return this.props.auth.isAuthenticated
-    }
-    getUserData = () => {
-        return this.props.auth.userData
-    }
-
     render() {
+        const { auth: { isAuthenticated, userData }, userLogout } = this.props
         return (
             <Fragment>
                 {/* {console.log(this.props.auth.isAuthenticated)} */}
-                <Header isAuthenticated={this.getAuthBool()} userData={this.props.auth.userData} />
+                <Header isAuthenticated={isAuthenticated} userData={userData} logout={userLogout} />
                 <Switch>
                     <Route path="/login" exact component={LoginForm} />
                     <Route path="/" exact component={BlogPostListContainer} />
@@ -72,12 +63,14 @@ class App extends Component {
 }
 
 App.propTypes = {
-    auth: PropTypes.object,
+    authuserData: PropTypes.object,
     userLoginSuccess: PropTypes.func,
+    userLogout: PropTypes.func,
 }
 App.defaultProps = {
     auth: {},
     userLoginSuccess: () => { },
+    userLogout: () => { }
 }
 
 const mapStateTopProps = (state, props) => {
@@ -91,6 +84,7 @@ const mapDispatchToProps = {
     userLoginSuccess,
     userProfileFetch,
     userSetId,
+    userLogout
 }
 
 export default connect(mapStateTopProps, mapDispatchToProps)(App)

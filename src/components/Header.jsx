@@ -7,11 +7,25 @@ import Loader from './Loader'
 class Header extends Component {
 
     renderUser(userData) {
-        // console.log(_.isEmpty(userData, true))
-        // console.log(userData !== undefined && _.isEmpty(userData, true))
-
         if (userData !== undefined && _.isEmpty(userData, true)) return <Loader />
-        else return userData.name
+        else return (
+            <span className='text-light'>
+                {userData.name}
+            </span>
+        )
+    }
+
+    renderLogout() {
+        return (
+            <span>
+                <button
+                    onClick={this.props.logout}
+                    className='btn btn-danger btn-big btn-block'
+                >
+                    LogOut!
+                </button>
+            </span>
+        )
     }
 
     render() {
@@ -19,10 +33,17 @@ class Header extends Component {
         return (
             <nav className="navbar navbar=extend-lg navbar-dark bg-dark">
                 <Link to='/' className="navbar-brand">React Blog</Link>
-                <span className='text-light'>
-                    {/* {console.log(userData)} */}
-                    {isAuthenticated ? this.renderUser(userData) : <Link to={'/login'}>Sign-in</Link>}
-                </span>
+                <div className='display-inline text-light'>
+                    {isAuthenticated ?
+                        <>
+                            {this.renderUser(userData)}
+                            {this.renderLogout()}
+                        </> :
+                        <button className='btn btn-success btn-big btn-block'>
+                            <Link className='text-light' to={'/login'}>Sign-in</Link>
+                        </button>
+                    }
+                </div>
             </nav>
         )
     }

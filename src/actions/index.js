@@ -25,6 +25,7 @@ import { SubmissionError } from 'redux-form/immutable'
 import history from '../history'
 
 import request from '../api/request'
+import { parseApiErrors, errorJwtToken } from "../api/apiUtils"
 
 //!___BLOG_POST_LIST___
 export const blogPostListRequest = () => ({
@@ -47,6 +48,11 @@ export const blogPostListFetch = () => async (dispatch) => {
         await request.get('/api/blog_posts').then(({ data }) => dispatch(blogPostListRecieved(data)))
     } catch (err) {
         dispatch(blogPostListError(err))
+        if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
+            console.log('logout')
+            dispatch(userLogout())
+            throw new SubmissionError({ _error: err.response.data.message })
+        }
     }
 }
 
@@ -192,7 +198,7 @@ export const userProfileReceived = (userId, userData) => ({
 
 export const userProfileFetch = (userId) => async dispatch => {
     dispatch(userProfileRequest())
-    await request
+    return await request
         .get(`/api/users/${userId}`, true)
         .then(res => {
             // console.log(res.data)
@@ -225,11 +231,18 @@ export const commentAdd = (comment, blogPostId) => async dispatch => {
     }, true)
         .then(res => dispatch(commentAdded(res.data)))
         .catch(err => {
-            // console.log(err.response.data.violations)
+            console.log(err.response)
+            if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
+                console.log('logout')
+                dispatch(userLogout())
+                throw new SubmissionError({ _error: err.response.data.message })
+            }
+            // console.log(parseApiErrors(err))
+            // errorJwtToken(err)
             const { violations } = err.response.data
             violations.map(violation => {
                 // console.log(violation.message)
-                throw new SubmissionError({ comment: 'is blank', _error: violation.message })
+                throw new SubmissionError(parseApiErrors(err))
                 // 
             })
         })

@@ -17,7 +17,8 @@ import {
     USER_PROFILE_REQUEST,
     USER_ERISE,
     USER_SET_ID,
-    COMMENT_ADDED
+    COMMENT_ADDED,
+    BLOG_POST_LIST_SET_PAGE
 } from "./types"
 
 import { SubmissionError } from 'redux-form/immutable'
@@ -42,10 +43,15 @@ export const blogPostListRecieved = (data) => ({
     payload: data,
 })
 
-export const blogPostListFetch = () => async (dispatch) => {
+export const blogPostListSetPage = (page) => ({
+    type: BLOG_POST_LIST_SET_PAGE,
+    payload: page,
+})
+
+export const blogPostListFetch = (page = 1) => async (dispatch) => {
     dispatch(blogPostListRequest())
     try {
-        await request.get('/api/blog_posts').then(({ data }) => dispatch(blogPostListRecieved(data)))
+        await request.get(`/api/blog_posts?_page=${page}`).then(({ data }) => dispatch(blogPostListRecieved(data)))
     } catch (err) {
         dispatch(blogPostListError(err))
         if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {

@@ -6,10 +6,12 @@ class Paginator extends Component {
     static propTypes = {
         currentPage: PropTypes.number,
         pageCount: PropTypes.number,
+        setPage: PropTypes.func
     }
     static defaultProps = {
         currentPage: 1,
         pageCount: 0,
+        setPage: () => { },
     }
     state = {
         range: [],
@@ -22,8 +24,8 @@ class Paginator extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log(prevProps.pageCount)
-        console.log(this.props.pageCount)
+        // console.log(prevProps.pageCount)
+        // console.log(this.props.pageCount)
         if (prevProps.pageCount !== this.props.pageCount && prevProps.pageCount === 0) {
             return this.setRange(this.state.pageCount)
         }
@@ -47,7 +49,7 @@ class Paginator extends Component {
 
 
     render() {
-        const { currentPage } = this.props
+        const { currentPage, setPage } = this.props
         return (
             <nav>
 
@@ -58,13 +60,16 @@ class Paginator extends Component {
                         </button>
                     </li>
                     {
-                        this.state.range.map(page => (
-                            <li key={page} className={classNames('page-item', { active: currentPage === page })}>
-                                <button className='page-link'>
-                                    {page}
-                                </button>
-                            </li>
-                        ))
+                        this.state.range.map(page => {
+                            const onClick = () => setPage(page)
+                            return (
+                                <li key={page} className={classNames('page-item', { active: currentPage === page })}>
+                                    <button className='page-link' onClick={onClick}>
+                                        {page}
+                                    </button>
+                                </li>
+                            )
+                        })
                     }
                     <li className="page-item">
                         <button className="page-link">

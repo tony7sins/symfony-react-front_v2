@@ -6,12 +6,16 @@ class Paginator extends Component {
     static propTypes = {
         currentPage: PropTypes.number,
         pageCount: PropTypes.number,
-        setPage: PropTypes.func
+        setPage: PropTypes.func,
+        prevPage: PropTypes.func,
+        nextPage: PropTypes.func,
     }
     static defaultProps = {
         currentPage: 1,
         pageCount: 0,
         setPage: () => { },
+        prevPage: () => { },
+        nextPage: () => { },
     }
     state = {
         range: [],
@@ -23,11 +27,9 @@ class Paginator extends Component {
         this.setRange(pageCount)
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        // console.log(prevProps.pageCount)
-        // console.log(this.props.pageCount)
-        if (prevProps.pageCount !== this.props.pageCount && prevProps.pageCount === 0) {
-            return this.setRange(this.state.pageCount)
+    componentDidUpdate(prevProps) {
+        if (prevProps.pageCount !== this.props.pageCount) {
+            return this.setRange(this.props.pageCount)
         }
     }
 
@@ -49,13 +51,12 @@ class Paginator extends Component {
 
 
     render() {
-        const { currentPage, setPage } = this.props
+        const { currentPage, setPage, prevPage, nextPage } = this.props
         return (
             <nav>
-
                 <ul className="pagination">
                     <li className="page-item">
-                        <button className="page-link">
+                        <button className="page-link" onClick={prevPage}>
                             Prev
                         </button>
                     </li>
@@ -72,7 +73,7 @@ class Paginator extends Component {
                         })
                     }
                     <li className="page-item">
-                        <button className="page-link">
+                        <button className="page-link" onClick={nextPage}>
                             Next
                             </button>
                     </li>

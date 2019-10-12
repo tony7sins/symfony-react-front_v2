@@ -54,7 +54,7 @@ class App extends Component {
                 <Header isAuthenticated={isAuthenticated} userData={userData} logout={userLogout} />
                 <Switch>
                     <Route path="/login" exact component={LoginForm} />
-                    <Route path="/" exact component={BlogPostListContainer} />
+                    <Route path="/:page?" exact component={BlogPostListContainer} />
                     <Route path="/blog-post/:id" component={BlogPostContainer} />
                 </Switch>
             </Fragment>

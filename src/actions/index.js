@@ -26,7 +26,7 @@ import { SubmissionError } from 'redux-form/immutable'
 import history from '../history'
 
 import request from '../api/request'
-import { parseApiErrors, errorJwtToken } from "../api/apiUtils"
+import { parseApiErrors } from "../api/apiUtils"
 
 //!___BLOG_POST_LIST___
 export const blogPostListRequest = () => ({
@@ -50,16 +50,17 @@ export const blogPostListSetPage = (page) => ({
 
 export const blogPostListFetch = (page = 1) => async (dispatch) => {
     dispatch(blogPostListRequest())
-    try {
-        await request.get(`/api/blog_posts?_page=${page}`).then(({ data }) => dispatch(blogPostListRecieved(data)))
-    } catch (err) {
-        dispatch(blogPostListError(err))
-        if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
-            console.log('logout')
-            dispatch(userLogout())
-            throw new SubmissionError({ _error: err.response.data.message })
-        }
-    }
+    return await request
+        .get(`/api/blog_posts?_page=${page}`)
+        .then(({ data }) => dispatch(blogPostListRecieved(data)))
+        .catch(err => {
+            dispatch(blogPostListError(err))
+            if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
+                console.log('logout')
+                dispatch(userLogout())
+                // throw new SubmissionError({ _error: err.response.data.message })
+            }
+        })
 }
 
 export const blogPostAdd = () => ({
@@ -214,11 +215,11 @@ export const userProfileFetch = (userId) => async dispatch => {
             if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
                 console.log('logout')
                 dispatch(userLogout())
-                throw new SubmissionError({ _error: err.response.data.message })
+                // throw new SubmissionError({ _error: err.response.data.message })
             }
-            if (err.response.data.code === 401) {
-                throw new SubmissionError({ _error: err.response.data.message })
-            }
+            // if (err.response.data.code === 401) {
+            //     throw new SubmissionError({ _error: err.response.data.message })
+            // }
             return dispatch(userProfileError())
         })
     // .catch(err => console.log(err.response.data))

@@ -74,14 +74,14 @@ class BlogPostListContainer extends Component {
                             posts={posts}
                             isFetching={isFetching}
                         />
+                        <Paginator
+                            pageCount={pageCount}
+                            currentPage={currentPage}
+                            setPage={this.changePage}
+                            nextPage={this.onNextPageClick}
+                            prevPage={this.onPrevPageClick}
+                        />
                     </div>
-                    <Paginator
-                        pageCount={pageCount}
-                        currentPage={currentPage}
-                        setPage={this.changePage}
-                        nextPage={this.onNextPageClick}
-                        prevPage={this.onPrevPageClick}
-                    />
                 </div>
             </Fragment>
         )

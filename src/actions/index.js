@@ -119,14 +119,44 @@ export const commentListUnload = () => ({
     type: COMMENT_LIST_UNLOAD
 })
 
-export const commentListFetch = id => async dispatch => {
+export const commentListFetch = (id, page = 1) => async dispatch => {
     dispatch(commentListRequest())
     try {
-        await request.get(`/api/blog_posts/${id}/comments`)
+        await request.get(`/api/blog_posts/${id}/comments?_page=${page}`)
             .then(({ data }) => dispatch(commentListRecieved(data)))
     } catch (err) {
         dispatch(commentListError(err))
     }
+}
+
+//!___USER_COMMENT___
+export const commentAdded = (comment) => ({
+    type: COMMENT_ADDED,
+    payload: comment
+})
+
+export const commentAdd = (comment, blogPostId) => async dispatch => {
+    return await request.post('/api/comments', {
+        content: comment,
+        blogPost: `/api/blog_posts/${blogPostId}`
+    }, true)
+        .then(res => dispatch(commentAdded(res.data)))
+        .catch(err => {
+            console.log(err.response)
+            if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
+                console.log('logout')
+                dispatch(userLogout())
+                throw new SubmissionError({ _error: err.response.data.message })
+            }
+            // console.log(parseApiErrors(err))
+            // errorJwtToken(err)
+            const { violations } = err.response.data
+            violations.map(violation => {
+                // console.log(violation.message)
+                throw new SubmissionError(parseApiErrors(err))
+                // 
+            })
+        })
 }
 
 //!___USER_LOGIN___
@@ -223,36 +253,6 @@ export const userProfileFetch = (userId) => async dispatch => {
             return dispatch(userProfileError())
         })
     // .catch(err => console.log(err.response.data))
-}
-
-//!___USER_COMMENT___
-export const commentAdded = (comment) => ({
-    type: COMMENT_ADDED,
-    payload: comment
-})
-
-export const commentAdd = (comment, blogPostId) => async dispatch => {
-    return await request.post('/api/comments', {
-        content: comment,
-        blogPost: `/api/blog_posts/${blogPostId}`
-    }, true)
-        .then(res => dispatch(commentAdded(res.data)))
-        .catch(err => {
-            console.log(err.response)
-            if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
-                console.log('logout')
-                dispatch(userLogout())
-                throw new SubmissionError({ _error: err.response.data.message })
-            }
-            // console.log(parseApiErrors(err))
-            // errorJwtToken(err)
-            const { violations } = err.response.data
-            violations.map(violation => {
-                // console.log(violation.message)
-                throw new SubmissionError(parseApiErrors(err))
-                // 
-            })
-        })
 }
 
 

@@ -5,11 +5,14 @@ import {
     COMMENT_LIST_UNLOAD,
     COMMENT_ADDED
 } from "../actions/types";
+import { hydraPageCount } from "../api/apiUtils";
 
 export default (
     state = {
         commentList: [],
         isFetching: false,
+        currentPage: 0,
+        pageCount: 0,
     }, action
 ) => {
     switch (action.type) {
@@ -19,10 +22,13 @@ export default (
                 isFetching: true,
             }
         case COMMENT_LIST_RECIEVED:
+            console.log(action.payload)
             return {
                 ...state,
                 isFetching: false,
-                commentList: action.payload['hydra:member']
+                commentList: action.payload['hydra:member'],
+                currentPage: state.currentPage + 1,
+                pageCount: hydraPageCount(action.payload)
             }
         case COMMENT_ADDED:
             // console.log(action.payload)
@@ -36,7 +42,9 @@ export default (
             return {
                 ...state,
                 isFetching: false,
-                commentList: []
+                commentList: [],
+                currentPage: 1,
+                pageCount: 0,
             }
         default:
             return state

@@ -6,6 +6,8 @@ import Loader from './Loader'
 import CommentList from './CommentList'
 import Warning from './Warning'
 import CommentForm from './CommentForm'
+import LoadMore from './LoadMore'
+
 
 class CommentListContainer extends Component {
     static propTypes = {
@@ -14,7 +16,9 @@ class CommentListContainer extends Component {
         commentListUnload: PropTypes.func,
         commentList: PropTypes.array,
         blogPostId: PropTypes.string,
-        isAuthenticated: PropTypes.bool
+        isAuthenticated: PropTypes.bool,
+        currentPage: PropTypes.number,
+        pageCount: PropTypes.number,
     }
     static defaultProps = {
         children: null,
@@ -23,6 +27,8 @@ class CommentListContainer extends Component {
         commentList: [],
         blogPostId: '',
         isAuthenticated: false,
+        currentPage: 1,
+        pageCount: 0,
     }
 
     componentDidMount() {
@@ -35,14 +41,33 @@ class CommentListContainer extends Component {
         this.props.commentListUnload()
     }
 
+    onLoadMoreOnClick = () => {
+        const { blogPostId, currentPage, commentListFetch } = this.props
+        commentListFetch(blogPostId, currentPage)
+    }
+
     render() {
 
-        const { isFetching, commentList, isAuthenticated, blogPostId } = this.props
+        const {
+            isFetching,
+            commentList,
+            isAuthenticated,
+            blogPostId,
+            currentPage,
+            pageCount
+        } = this.props
+
+        const showMoreComments = (pageCount > 1 && currentPage <= pageCount)
         return (
             <>
                 {(0 === commentList.length && isFetching) && <Loader />}
                 {(0 === commentList.length && !isFetching) && <Warning text='blog post' />}
                 {(commentList !== []) ? <CommentList commentList={commentList} /> : <h3>No comments!</h3>}
+                {showMoreComments &&
+                    <LoadMore
+                        label={'Load More!?'}
+                        onClick={this.onLoadMoreOnClick}
+                        disabled={isFetching} />}
                 {isAuthenticated &&
                     <>
                         <CommentForm blogPostId={blogPostId} />

@@ -6,6 +6,7 @@ import commentListReducer from './commentList'
 import authReduscer from './auth'
 import { reducer as formReducer } from 'redux-form'
 import registrationReducer from './registration'
+import blogPostFormReducer from './blogPostForm'
 
 export default combineReducers({
     blogPostList: blogPostListReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
     commentList: commentListReducer,
     registration: registrationReducer,
     auth: authReduscer,
+    blogPostForm: blogPostFormReducer,
     form: formReducer,
 })

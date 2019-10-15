@@ -8,15 +8,18 @@ import { Redirect } from 'react-router'
 import { renderField } from '../form'
 import history from '../history'
 import ImageUpload from './ImageUpload'
+import ImageBrowser from './ImageBrowser'
 
 class BlogPostForm extends Component {
     static propTypes = {
         userData: PropTypes.object,
-        blogPostAdd: PropTypes.func
+        blogPostAdd: PropTypes.func,
+        images: PropTypes.array,
     }
     static defaultProps = {
         userData: {},
-        blogPostAdd: () => { }
+        blogPostAdd: () => { },
+        images: [],
     }
 
     onSubmit = ({ title, content }) => {
@@ -29,7 +32,7 @@ class BlogPostForm extends Component {
     }
 
     render() {
-        const { userData, handleSubmit, submitting, pristine, error } = this.props
+        const { userData, handleSubmit, submitting, pristine, error, images } = this.props
 
         if (!canWriteBlogPosts(userData)) {
             return <Redirect to="login" />
@@ -41,6 +44,7 @@ class BlogPostForm extends Component {
                         <Field name="title" label="Title:" type="text" component={renderField} />
                         <Field name="content" label="Content:" type="textarea" component={renderField} />
                         <ImageUpload />
+                        <ImageBrowser images={images} />
                         <button
                             type="submit"
                             className="btn btn-primary btn-big btn-block"
@@ -60,9 +64,10 @@ const WrappedForm = reduxForm({
 })(BlogPostForm)
 
 const mapStateToProps = state => {
-    // console.log(state.auth.userData)
+    // console.log(...state.blogPostForm)
     return {
-        userData: state.auth.userData
+        userData: state.auth.userData,
+        ...state.blogPostForm,
     }
 }
 

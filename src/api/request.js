@@ -36,6 +36,14 @@ const request = {
         setTokenToHeader(secured)
         return api.post(url, body)
     },
+    upload: (url, data, secured = true) => {
+        setTokenToHeader(secured)
+        return api.post(url, data, {
+            headers: {
+                'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+            }
+        }).then(res => res.data)
+    },
     setToken: (jwtToken) => token = jwtToken
     // return console.log(token)
 

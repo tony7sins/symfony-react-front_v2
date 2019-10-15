@@ -21,7 +21,10 @@ import {
     BLOG_POST_LIST_SET_PAGE,
     USER_REGISTER_SUCCESS,
     USER_CONFIRMATION_SUCCESS,
-    USER_REGISTER_COMPLETE
+    USER_REGISTER_COMPLETE,
+    IMAGE_UPLOADED,
+    IMAGE_UPLOAD_REQUEST,
+    IMAGE_UPLOAD_ERROR
 } from "./types"
 
 import { SubmissionError } from 'redux-form/immutable'
@@ -313,5 +316,29 @@ export const userProfileFetch = (userId) => async dispatch => {
     // .catch(err => console.log(err.response.data))
 }
 
+//!___IMAGE_UPLOAD___
+export const imageUploaded = (data) => ({
+    type: IMAGE_UPLOADED,
+    payload: {
+        image: data
+    }
+})
+
+export const imageUploadRequest = () => ({
+    type: IMAGE_UPLOAD_REQUEST
+})
+
+export const imageUploadError = () => ({
+    type: IMAGE_UPLOAD_ERROR
+})
+
+export const imageUpload = (file) => async dispatch => {
+    dispatch(imageUploadRequest())
+    const data = new FormData()
+    data.append('file', file, file.name)
+    return await request.upload('/api/images', data)
+        .then(res => dispatch(imageUploaded(res)))
+        .catch(() => dispatch(imageUploadError()))
+}
 
 

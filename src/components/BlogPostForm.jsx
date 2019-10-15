@@ -7,6 +7,7 @@ import { canWriteBlogPosts } from '../api/apiUtils'
 import { Redirect } from 'react-router'
 import { renderField } from '../form'
 import history from '../history'
+import ImageUpload from './ImageUpload'
 
 class BlogPostForm extends Component {
     static propTypes = {
@@ -39,7 +40,7 @@ class BlogPostForm extends Component {
                     <form onSubmit={handleSubmit(this.onSubmit)}>
                         <Field name="title" label="Title:" type="text" component={renderField} />
                         <Field name="content" label="Content:" type="textarea" component={renderField} />
-
+                        <ImageUpload />
                         <button
                             type="submit"
                             className="btn btn-primary btn-big btn-block"

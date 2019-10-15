@@ -11,7 +11,7 @@ export default (
     state = {
         commentList: [],
         isFetching: false,
-        currentPage: 0,
+        currentPage: 1,
         pageCount: 0,
     }, action
 ) => {
@@ -22,11 +22,12 @@ export default (
                 isFetching: true,
             }
         case COMMENT_LIST_RECIEVED:
-            console.log(action.payload)
+            console.log(0 === state.commentList.length)
+            console.log(state.commentList.concat(action.payload['hydra:member']))
             return {
                 ...state,
                 isFetching: false,
-                commentList: action.payload['hydra:member'],
+                commentList: 0 === state.commentList.length ? action.payload['hydra:member'] : state.commentList.concat(action.payload['hydra:member']),
                 currentPage: state.currentPage + 1,
                 pageCount: hydraPageCount(action.payload)
             }

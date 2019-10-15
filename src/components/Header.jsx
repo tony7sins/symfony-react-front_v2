@@ -7,9 +7,11 @@ import Loader from './Loader'
 class Header extends Component {
 
     renderUser(userData) {
-        if (userData !== undefined && _.isEmpty(userData, true)) return <Loader />
+        if (userData !== undefined && _.isEmpty(userData, true)) {
+            return <div style={{ width: '100px' }} > <Loader /></div>
+        }
         else return (
-            <span className='text-light'>
+            <span className='text-light mr-3 align-self-center'>
                 {userData.name}
             </span>
         )
@@ -34,17 +36,24 @@ class Header extends Component {
             <nav className="navbar navbar=extend-lg navbar-dark bg-dark">
                 <Link to='/' className="navbar-brand">React Blog</Link>
                 <div className='display-inline text-light'>
-                    {isAuthenticated ?
-                        <>
-                            {this.renderUser(userData)}
-                            {this.renderLogout()}
-                        </> :
-                        <button className='btn btn-success btn-big btn-block'>
-                            <Link className='text-light' to={'/login'}>Sign-in</Link>
-                        </button>
-                    }
+                    <div className="d-flex">
+                        {isAuthenticated ?
+                            <>
+                                {this.renderUser(userData)}
+                                {this.renderLogout()}
+                            </> :
+                            <>
+                                <button className='btn btn-light text-dark btn-big ml-1'>
+                                    <Link className='text-dark text-decoration-none' to={'/register'}>Register</Link>
+                                </button>
+                                <button className='btn btn-success btn-big ml-1'>
+                                    <Link className='text-light text-decoration-none' to={'/login'}>Sign-in</Link>
+                                </button>
+                            </>
+                        }
+                    </div>
                 </div>
-            </nav>
+            </nav >
         )
     }
 }

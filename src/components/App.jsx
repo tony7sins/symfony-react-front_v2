@@ -1,12 +1,5 @@
 import React, { Fragment, Component } from 'react'
 import PropTypes from 'prop-types'
-import { Route, Switch } from 'react-router-dom'
-
-import LoginForm from './LoginForm'
-import BlogPostListContainer from './BlogPostListContainer'
-import BlogPostContainer from './BlogPostContainer'
-import Header from './Header'
-
 import { connect } from 'react-redux'
 import {
     userLoginSuccess,
@@ -14,6 +7,13 @@ import {
     userSetId,
     userLogout,
 } from '../actions'
+
+import { Route, Switch } from 'react-router-dom'
+import LoginForm from './LoginForm'
+import BlogPostListContainer from './BlogPostListContainer'
+import BlogPostContainer from './BlogPostContainer'
+import Header from './Header'
+import RegisterContainer from './RegisterContainer'
 
 class App extends Component {
     state = {
@@ -54,6 +54,7 @@ class App extends Component {
                 <Header isAuthenticated={isAuthenticated} userData={userData} logout={userLogout} />
                 <Switch>
                     <Route path="/login" exact component={LoginForm} />
+                    <Route path="/register" exact component={RegisterContainer} />
                     <Route path="/:page?" exact component={BlogPostListContainer} />
                     <Route path="/blog-post/:id" component={BlogPostContainer} />
                 </Switch>

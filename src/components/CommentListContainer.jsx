@@ -60,7 +60,7 @@ class CommentListContainer extends Component {
         const showMoreComments = (pageCount > 1 && currentPage <= pageCount)
         return (
             <>
-                {(0 === commentList.length && isFetching) && <Loader />}
+                {(0 === commentList.length && isFetching && currentPage === 1) && <Loader />}
                 {(0 === commentList.length && !isFetching) && <Warning text='blog post' />}
                 {(commentList !== []) ? <CommentList commentList={commentList} /> : <h3>No comments!</h3>}
                 {showMoreComments &&

@@ -67,7 +67,7 @@ class BlogPostListContainer extends Component {
         const { posts, isFetching, currentPage, pageCount } = this.props
         return (
             <Fragment>
-                {console.log(pageCount)}
+                {/* {console.log(pageCount)} */}
                 <div className="mb-3 mt-3">
                     <div className="card-body">
                         <BlogPostList

@@ -18,7 +18,10 @@ import {
     USER_ERISE,
     USER_SET_ID,
     COMMENT_ADDED,
-    BLOG_POST_LIST_SET_PAGE
+    BLOG_POST_LIST_SET_PAGE,
+    USER_REGISTER_SUCCESS,
+    USER_CONFIRMATION_SUCCESS,
+    USER_REGISTER_COMPLETE
 } from "./types"
 
 import { SubmissionError } from 'redux-form/immutable'
@@ -148,14 +151,12 @@ export const commentAdd = (comment, blogPostId) => async dispatch => {
                 dispatch(userLogout())
                 throw new SubmissionError({ _error: err.response.data.message })
             }
-            // console.log(parseApiErrors(err))
-            // errorJwtToken(err)
-            const { violations } = err.response.data
-            violations.map(violation => {
-                // console.log(violation.message)
-                throw new SubmissionError(parseApiErrors(err))
-                // 
-            })
+
+            // const { violations } = err.response.data
+            // violations.map(() => {
+            //     throw new SubmissionError(parseApiErrors(err))
+            // })
+            throw new SubmissionError(parseApiErrors(err))
         })
 }
 
@@ -177,7 +178,7 @@ export const userLoginAttapmt = (username, password) => async dispatch => {
         .then(res => dispatch(userLoginSuccess(res.data.token, res.data.id)))
         .then(() => history.push('/'))
         .catch(err => {
-            console.log(err.response.status)
+            // console.log(err.response.status)
             if (err.response.data.code === 401 && err.response.data.message === "Expired JWT Token") {
                 // console.log('logout')
                 dispatch(userLogout())
@@ -190,6 +191,40 @@ export const userLoginAttapmt = (username, password) => async dispatch => {
                 throw new SubmissionError({ _error: 'что-то пошло не так!' })
             }
             return
+        })
+}
+
+export const userRegisterSuccess = () => ({
+    type: USER_REGISTER_SUCCESS
+})
+
+export const userRegister = (username, password, retypedPassword, email, name) => async dispatch => {
+    // await dispatch(userErise())
+    // if (username ===  null) await dispatch(userLogout())
+    return await request
+        .post('/api/users', { username, password, retypedPassword, email, name }, false)
+        .then(() => dispatch(userRegisterSuccess()))
+        .catch(err => {
+            throw new SubmissionError(parseApiErrors(err))
+        })
+}
+
+export const userConfirmSuccess = () => ({
+    type: USER_CONFIRMATION_SUCCESS
+})
+
+export const userRegisterComplete = () => ({
+    type: USER_REGISTER_COMPLETE
+})
+
+export const userConfirm = (confirmationToken) => async dispatch => {
+    return await request
+        .post('/api/users/confirm', { confirmationToken }, false)
+        .then(() => dispatch(userConfirmSuccess()))
+        .catch(err => {
+            throw new SubmissionError({
+                _error: 'Invalid TOKEN!'
+            })
         })
 }
 

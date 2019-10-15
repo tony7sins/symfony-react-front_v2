@@ -1,4 +1,5 @@
 
+import _ from 'lodash'
 // import { SubmissionError } from 'redux-form/immutable'
 // import { userLogout } from '../actions'
 
@@ -15,4 +16,15 @@ export const hydraPageCount = (collection) => {
         return 1
     }
     return Number(collection['hydra:view']['hydra:last'].match(/page=(\d+)/)[1])
+}
+
+const canWriteBlogPostRoles = ["ROLE_WRITER", "ROLE_ADMIN", "ROLE_SUPERADMIN"]
+
+export const canWriteBlogPosts = (userData) => {
+    // console.log(userData.roles)
+    // console.log(userData.roles === undefined)
+    if (!_.isEmpty(userData) && userData.roles !== undefined) {
+        // console.log('OK!')
+        return userData.roles.some(userRoles => canWriteBlogPostRoles.includes(userRoles))
+    }
 }

@@ -66,13 +66,36 @@ export const blogPostListFetch = (page = 1) => async (dispatch) => {
         })
 }
 
-export const blogPostAdd = () => ({
-    type: BLOG_POST_LIST_ADD,
-    payload: {
-        id: Math.floor(Math.random() * 100 + 3),
-        title: 'A new post created!'
-    }
-})
+// used in:
+// CommentListContainer
+// export const blogPostAdd = () => ({
+//     type: BLOG_POST_LIST_ADD,
+//     payload: {
+//         id: Math.floor(Math.random() * 100 + 3),
+//         title: 'A new post created!'
+//     }
+// })
+
+export const blogPostAdd = (title, content) => async dispatch => {
+    return await request.post('api/blog_posts', {
+        title,
+        content,
+        slug: title && title.replace(/ /g, '-').toLowerCase()
+    })
+        .catch(err => {
+            if (err.response.data.code === 401) {
+                console.log('logout')
+                dispatch(userLogout())
+                // throw new SubmissionError({ _error: err.response.data.message })
+            } else if (err.response.status === 403) {
+                console.log('logout')
+                // dispatch(userLogout())
+                throw new SubmissionError({ _error: "don't have enouth rights" })
+            }
+            throw new SubmissionError(parseApiErrors(err))
+        })
+}
+
 
 //!___BLOG_POST___
 export const blogPostRequest = () => ({

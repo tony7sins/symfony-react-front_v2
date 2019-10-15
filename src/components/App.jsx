@@ -14,6 +14,7 @@ import BlogPostListContainer from './BlogPostListContainer'
 import BlogPostContainer from './BlogPostContainer'
 import Header from './Header'
 import RegisterContainer from './RegisterContainer'
+import BlogPostForm from './BlogPostForm'
 
 class App extends Component {
     state = {
@@ -55,8 +56,10 @@ class App extends Component {
                 <Switch>
                     <Route path="/login" exact component={LoginForm} />
                     <Route path="/register" exact component={RegisterContainer} />
-                    <Route path="/:page?" exact component={BlogPostListContainer} />
+                    <Route path='/blog-post-form' exact component={BlogPostForm} />
                     <Route path="/blog-post/:id" component={BlogPostContainer} />
+                    <Route path="/:page?" exact component={BlogPostListContainer} />
+
                 </Switch>
             </Fragment>
         )

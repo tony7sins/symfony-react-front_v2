@@ -35,6 +35,11 @@ class Header extends Component {
         return (
             <nav className="navbar navbar=extend-lg navbar-dark bg-dark">
                 <Link to='/' className="navbar-brand">React Blog</Link>
+                {(isAuthenticated && !_.isEmpty(userData)) && (
+                    <li className="nav-item" >
+                        <Link to='/blog-post-form' className="navbar-link">New Post!</Link>
+                    </li>
+                )}
                 <div className='display-inline text-light'>
                     <div className="d-flex">
                         {isAuthenticated ?

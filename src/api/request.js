@@ -44,6 +44,10 @@ const request = {
             }
         }).then(res => res.data)
     },
+    delete: (url, secured = true) => {
+        setTokenToHeader(secured)
+        return api.delete(url).then(res => res.data)
+    },
     setToken: (jwtToken) => token = jwtToken
     // return console.log(token)
 

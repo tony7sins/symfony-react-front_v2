@@ -2,12 +2,15 @@ import './ImageUpload.css'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { imageUpload } from '../actions'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 class ImageUpload extends Component {
-    // static propTypes = {
-    //     prop: PropTypes
-    // }
+    static propTypes = {
+        imageUpload: PropTypes.func,
+    }
+    static defaultProps = {
+        imageUpload: () => { },
+    }
 
     onChange = (e) => {
         // console.log(e.target)

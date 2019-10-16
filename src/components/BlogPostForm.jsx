@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
-import { blogPostAdd, blogPostFormUpload } from '../actions'
+import {
+    blogPostAdd,
+    blogPostFormUpload,
+    imageDelete
+} from '../actions'
 import { canWriteBlogPosts } from '../api/apiUtils'
 import { Redirect } from 'react-router'
 import { renderField } from '../form'
@@ -16,12 +20,14 @@ class BlogPostForm extends Component {
         blogPostAdd: PropTypes.func,
         images: PropTypes.array,
         blogPostFormUpload: PropTypes.func,
+        imageDelete: PropTypes.func,
     }
     static defaultProps = {
         userData: {},
         blogPostAdd: () => { },
         images: [],
-        blogPostFormUpload: () => { }
+        blogPostFormUpload: () => { },
+        imageDelete: () => { }
     }
 
     componentWillUnmount() {
@@ -38,7 +44,16 @@ class BlogPostForm extends Component {
     }
 
     render() {
-        const { userData, handleSubmit, submitting, pristine, error, images, isImageUploading } = this.props
+        const {
+            userData,
+            handleSubmit,
+            submitting,
+            pristine,
+            error,
+            images,
+            isImageUploading,
+            imageDelete
+        } = this.props
 
         if (!canWriteBlogPosts(userData)) {
             return <Redirect to="login" />
@@ -50,7 +65,7 @@ class BlogPostForm extends Component {
                         <Field name="title" label="Title:" type="text" component={renderField} />
                         <Field name="content" label="Content:" type="textarea" component={renderField} />
                         <ImageUpload />
-                        <ImageBrowser images={images} />
+                        <ImageBrowser images={images} deleteHandler={imageDelete} />
                         <button
                             type="submit"
                             className="btn btn-primary btn-big btn-block"
@@ -80,6 +95,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = ({
     blogPostAdd,
     blogPostFormUpload,
+    imageDelete,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WrappedForm)

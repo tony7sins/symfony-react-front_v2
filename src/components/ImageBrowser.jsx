@@ -18,7 +18,7 @@ export default class ImageBrowser extends Component {
                 {images.map(image => {
                     return (
                         <div key={image.id} className="col-md-6 col-lg-4">
-                            {console.log(image)}
+                            {/* {console.log(image)} */}
                             <div className="mt-2 mb-2">
                                 <img alt={`number ${image.id}`} className="img-fluid" src={`${baseURL}/${image.url}`} />
                             </div>

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
-import { blogPostAdd } from '../actions'
+import { blogPostAdd, blogPostFormUpload } from '../actions'
 import { canWriteBlogPosts } from '../api/apiUtils'
 import { Redirect } from 'react-router'
 import { renderField } from '../form'
@@ -15,16 +15,22 @@ class BlogPostForm extends Component {
         userData: PropTypes.object,
         blogPostAdd: PropTypes.func,
         images: PropTypes.array,
+        blogPostFormUpload: PropTypes.func,
     }
     static defaultProps = {
         userData: {},
         blogPostAdd: () => { },
         images: [],
+        blogPostFormUpload: () => { }
+    }
+
+    componentWillUnmount() {
+        this.props.blogPostFormUpload()
     }
 
     onSubmit = ({ title, content }) => {
-        const { blogPostAdd, reset } = this.props
-        return blogPostAdd(title, content)
+        const { blogPostAdd, reset, images } = this.props
+        return blogPostAdd(title, content, images)
             .then(() => {
                 reset()
                 history.push('/')
@@ -72,7 +78,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = ({
-    blogPostAdd
+    blogPostAdd,
+    blogPostFormUpload,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WrappedForm)

@@ -24,7 +24,8 @@ import {
     USER_REGISTER_COMPLETE,
     IMAGE_UPLOADED,
     IMAGE_UPLOAD_REQUEST,
-    IMAGE_UPLOAD_ERROR
+    IMAGE_UPLOAD_ERROR,
+    BLOG_POST_FORM_UPLOAD
 } from "./types"
 
 import { SubmissionError } from 'redux-form/immutable'
@@ -69,21 +70,13 @@ export const blogPostListFetch = (page = 1) => async (dispatch) => {
         })
 }
 
-// used in:
-// CommentListContainer
-// export const blogPostAdd = () => ({
-//     type: BLOG_POST_LIST_ADD,
-//     payload: {
-//         id: Math.floor(Math.random() * 100 + 3),
-//         title: 'A new post created!'
-//     }
-// })
-
-export const blogPostAdd = (title, content) => async dispatch => {
+// BlogPostForm
+export const blogPostAdd = (title, content, images = []) => async dispatch => {
     return await request.post('api/blog_posts', {
         title,
         content,
-        slug: title && title.replace(/ /g, '-').toLowerCase()
+        slug: title && title.replace(/ /g, '-').toLowerCase(),
+        images: images.map(image => `api/images/${image.id}`)
     })
         .catch(err => {
             if (err.response.data.code === 401) {
@@ -98,6 +91,11 @@ export const blogPostAdd = (title, content) => async dispatch => {
             throw new SubmissionError(parseApiErrors(err))
         })
 }
+
+// BlogPostForm
+export const blogPostFormUpload = () => ({
+    type: BLOG_POST_FORM_UPLOAD
+})
 
 
 //!___BLOG_POST___

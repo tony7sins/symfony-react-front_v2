@@ -1,4 +1,4 @@
-import { IMAGE_UPLOAD_REQUEST, IMAGE_UPLOADED, IMAGE_UPLOAD_ERROR } from "../actions/types"
+import { IMAGE_UPLOAD_REQUEST, IMAGE_UPLOADED, IMAGE_UPLOAD_ERROR, BLOG_POST_FORM_UPLOAD } from "../actions/types"
 
 export default (state = {
     isImageUploading: false,
@@ -22,6 +22,13 @@ export default (state = {
             return {
                 ...state,
                 isImageUploading: false,
+            }
+        case BLOG_POST_FORM_UPLOAD:
+            return {
+                ...state,
+                isImageUploading: false,
+                image: null,
+                images: []
             }
         default:
             return state

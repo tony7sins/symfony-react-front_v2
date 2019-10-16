@@ -12,14 +12,15 @@ export default class ImageBrowser extends Component {
 
     render() {
         const { images } = this.props
+
         return (
             <div className="row mt-4 mb-4">
-                Nothing here yet!
                 {images.map(image => {
                     return (
                         <div key={image.id} className="col-md-6 col-lg-4">
+                            {console.log(image)}
                             <div className="mt-2 mb-2">
-                                <image className="img-fluid" src={`${baseURL}/${image.url}`} />
+                                <img alt={`number ${image.id}`} className="img-fluid" src={`${baseURL}/${image.url}`} />
                             </div>
                         </div>
                     )

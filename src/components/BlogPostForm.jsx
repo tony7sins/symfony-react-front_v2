@@ -32,7 +32,7 @@ class BlogPostForm extends Component {
     }
 
     render() {
-        const { userData, handleSubmit, submitting, pristine, error, images } = this.props
+        const { userData, handleSubmit, submitting, pristine, error, images, isImageUploading } = this.props
 
         if (!canWriteBlogPosts(userData)) {
             return <Redirect to="login" />
@@ -48,7 +48,7 @@ class BlogPostForm extends Component {
                         <button
                             type="submit"
                             className="btn btn-primary btn-big btn-block"
-                            disabled={submitting || pristine} >
+                            disabled={submitting || pristine || isImageUploading} >
                             Submit
                         </button>
                     </form>
